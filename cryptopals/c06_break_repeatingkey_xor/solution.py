@@ -52,7 +52,7 @@ def score_text_string(string):
     score_text = sum([x in ascii_text for x in string]) / len(string)
     return score_text
 
-# Hàm giải mã từng khối sau hoán vị
+# Hàm giải mã từng block sau chuyển vị
 def break_block(block):
     result = []
     for key in range(256):
