@@ -5,12 +5,6 @@ with open(r"6.txt", "r") as f:
 ciphertext = base64.b64decode(data)
 
 # Hàm khoảng cách Hamming - Hdistance()
-'''Giải thích hàm Hdistance
-Input 2 bytes b1, b2
-Tạo biến cộng dồn distance = 0
-Với mỗi cặp x, y trong zip(b1, b2)
-Nếu x ^ y = 1 (nghĩa là x khác y) thì distance += 1
-'''
 def Hdistance(b1, b2):
     assert len(b1) == len(b2)
     distance = 0
