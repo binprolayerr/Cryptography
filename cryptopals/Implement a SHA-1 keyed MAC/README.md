@@ -8,9 +8,13 @@ Verify that you cannot tamper with the message without breaking the MAC you've p
 Thuật toán bắt đầu bằng cách thiết lập năm biến băm 32-bit (còn gọi là trạng thái nội bộ), ký hiệu là H0, H1, H2, H3, H4, với các giá trị hex cố định:
 
 H_0 = 0x67452301
+
 H_1 = 0xEFCDAB89
+
 H_2 = 0x98BADCFE
+
 H_3 = 0x10325476
+
 H_4 = 0xC3D2E1F0
 
 
@@ -18,10 +22,16 @@ Các giá trị này là "số ma thuật" (magic numbers) được sử dụng 
 ### 2. Xử lý Đệm Thông điệp (Message Padding)
 SHA-1 xử lý thông điệp theo các khối 512 bit (64 byte). Bước đệm đảm bảo rằng thông điệp, sau khi đệm, có độ dài (tính bằng bit) là một bội số của 512, đồng thời mã hóa độ dài ban đầu của nó.Nối bit '1': Nối một bit 1 vào cuối thông điệp gốc.Nối bit '0': Nối các bit 0 cho đến khi độ dài thông điệp mới (tính bằng bit) $\equiv 448 \pmod{512}$ (chia 512 dư 448).Nối Độ dài Gốc: Nối độ dài ban đầu của thông điệp (tính bằng bit) dưới dạng một số nguyên 64-bit Big-Endian.Mục đích: Đảm bảo rằng hàm nén luôn hoạt động trên các khối 512 bit hoàn chỉnh và ngăn chặn các cuộc tấn công nhất định.
 ### 3. Chuẩn bị Từ Thông điệp (Word Preparation)
-Sau khi thông điệp được chia thành các khối 512 bit, mỗi khối được xử lý riêng biệt:Chia khối: Mỗi khối 512 bit được chia thành 16 từ 32-bit ($W_0$ đến $W_{15}$).Mở rộng: 16 từ này được mở rộng thành 80 từ 32-bit ($W_0$ đến $W_{79}$).Đối với $t = 16$ đến $79$, mỗi từ mới được tính bằng phép XOR giữa 4 từ trước đó, sau đó xoay trái 1 bit:
-\begin{align*} 
-W_t = \text{ROTL}^1(W_{t-3} \oplus W_{t-8} \oplus W_{t-14} \oplus W_{t-16}) \end{align*} (ROTL: Rotate Left - Xoay Trái).
+Sau khi thông điệp được chia thành các khối 512 bit, mỗi khối được xử lý riêng biệt:
 
+**Chia khối:**  
+Mỗi khối 512 bit được chia thành 16 từ 32-bit (W₀ đến W₁₅).
+
+**Mở rộng:**  
+16 từ này được mở rộng thành 80 từ 32-bit (W₀ đến W₇₉).  
+Đối với t = 16 đến 79, mỗi từ mới được tính bằng phép XOR giữa 4 từ trước đó, sau đó xoay trái 1 bit:
+W_t = ROTL¹(W_{t−3} ⊕ W_{t−8} ⊕ W_{t−14} ⊕ W_{t−16})
+*(ROTL: Rotate Left — phép xoay trái bit)*
 ### 4. Hàm Nén (The Compression Function)
 Đây là lõi của thuật toán, nơi dữ liệu thực sự được băm. Nó thực hiện 80 vòng lặp trên 5 biến băm làm việc ($A, B, C, D, E$), được khởi tạo từ $H_0$ đến $H_4$ trước khi xử lý mỗi khối 512 bit.Trong mỗi vòng $t$ (từ 0 đến 79), một giá trị Temp (tạm thời) được tính toán:$$\text{Temp} = \text{ROTL}^5(A) + f_t(B, C, D) + E + K_t + W_t \pmod{2^{32}}$$Trong đó:$A, B, C, D, E$: Các biến làm việc 32-bit.$\text{ROTL}^5(A)$: Xoay trái $A$ 5 bit.$f_t(B, C, D)$: Một hàm logic phi tuyến tính khác nhau tùy thuộc vào vòng (sử dụng XOR, AND, NOT).$K_t$: Hằng số vòng (Round Constant) 32-bit, thay đổi sau mỗi 20 vòng.$W_t$: Từ thông điệp đã mở rộng ở vòng $t$.$+$: Phép Cộng Modulo $2^{32}$.Sau khi tính toán $\text{Temp}$, các biến làm việc được cập nhật:
 \begin{align*} E &= D \\ D &= C \\ C &= \text{ROTL}^{30}(B) \\ B &= A \\ A &= \text{Temp} \end{align*}
@@ -162,6 +172,7 @@ print(f"SHA-1: {result_hash}")
 # 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
 
 ```
+
 
 
 
