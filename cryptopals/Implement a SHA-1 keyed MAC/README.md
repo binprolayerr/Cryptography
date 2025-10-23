@@ -17,6 +17,7 @@ H_4 &= \texttt{0xC3D2E1F0}
 \end{aligned}
 \]
 
+
 Các giá trị này là "số ma thuật" (magic numbers) được sử dụng để khởi tạo quá trình băm.
 ### 2. Xử lý Đệm Thông điệp (Message Padding)
 SHA-1 xử lý thông điệp theo các khối 512 bit (64 byte). Bước đệm đảm bảo rằng thông điệp, sau khi đệm, có độ dài (tính bằng bit) là một bội số của 512, đồng thời mã hóa độ dài ban đầu của nó.Nối bit '1': Nối một bit 1 vào cuối thông điệp gốc.Nối bit '0': Nối các bit 0 cho đến khi độ dài thông điệp mới (tính bằng bit) $\equiv 448 \pmod{512}$ (chia 512 dư 448).Nối Độ dài Gốc: Nối độ dài ban đầu của thông điệp (tính bằng bit) dưới dạng một số nguyên 64-bit Big-Endian.Mục đích: Đảm bảo rằng hàm nén luôn hoạt động trên các khối 512 bit hoàn chỉnh và ngăn chặn các cuộc tấn công nhất định.
@@ -165,4 +166,5 @@ print(f"SHA-1: {result_hash}")
 # 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
 
 ```
+
 
