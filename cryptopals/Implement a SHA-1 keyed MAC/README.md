@@ -69,7 +69,11 @@ Hᵢ = Hᵢ + (biến làm việc tương ứng) (mod 2³²)
 Quy trình này được lặp lại cho **tất cả các khối 512 bit** đã được đệm.
 
 ### 5. Kết quả Đầu ra (Final Hash)
-Giá trị băm SHA-1 cuối cùng là sự nối (concatenation) của năm giá trị băm cuối cùng:$$\text{Hash} = H_0 \text{ || } H_1 \text{ || } H_2 \text{ || } H_3 \text{ || } H_4$$Kết quả là một giá trị băm 160-bit (40 ký tự hexa).
+Giá trị băm **SHA-1** cuối cùng là sự nối (*concatenation*) của năm giá trị băm cuối cùng:
+
+Hash = H₀ || H₁ || H₂ || H₃ || H₄
+
+Kết quả là một **giá trị băm 160-bit** (tương ứng **40 ký tự hệ hexa**).
 ## Code
 ```python
 import struct
@@ -204,6 +208,7 @@ print(f"SHA-1: {result_hash}")
 # 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
 
 ```
+
 
 
 
