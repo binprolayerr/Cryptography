@@ -33,9 +33,41 @@ Mỗi khối 512 bit được chia thành 16 từ 32-bit (W₀ đến W₁₅).
 W_t = ROTL¹(W_{t−3} ⊕ W_{t−8} ⊕ W_{t−14} ⊕ W_{t−16})
 *(ROTL: Rotate Left — phép xoay trái bit)*
 ### 4. Hàm Nén (The Compression Function)
-Đây là lõi của thuật toán, nơi dữ liệu thực sự được băm. Nó thực hiện 80 vòng lặp trên 5 biến băm làm việc ($A, B, C, D, E$), được khởi tạo từ $H_0$ đến $H_4$ trước khi xử lý mỗi khối 512 bit.Trong mỗi vòng $t$ (từ 0 đến 79), một giá trị Temp (tạm thời) được tính toán:$$\text{Temp} = \text{ROTL}^5(A) + f_t(B, C, D) + E + K_t + W_t \pmod{2^{32}}$$Trong đó:$A, B, C, D, E$: Các biến làm việc 32-bit.$\text{ROTL}^5(A)$: Xoay trái $A$ 5 bit.$f_t(B, C, D)$: Một hàm logic phi tuyến tính khác nhau tùy thuộc vào vòng (sử dụng XOR, AND, NOT).$K_t$: Hằng số vòng (Round Constant) 32-bit, thay đổi sau mỗi 20 vòng.$W_t$: Từ thông điệp đã mở rộng ở vòng $t$.$+$: Phép Cộng Modulo $2^{32}$.Sau khi tính toán $\text{Temp}$, các biến làm việc được cập nhật:
-\begin{align*} E &= D \\ D &= C \\ C &= \text{ROTL}^{30}(B) \\ B &= A \\ A &= \text{Temp} \end{align*}
-Cập nhật Trạng thái BămSau khi hoàn thành 80 vòng lặp cho một khối 512 bit, các biến làm việc ($A, B, C, D, E$) được cộng (modulo $2^{32}$) vào các giá trị băm khởi tạo $H_0$ đến $H_4$:$$H_i = H_i + \text{Biến làm việc tương ứng } \pmod{2^{32}}$$Quy trình này được lặp lại cho tất cả các khối 512 bit đã được đệm.
+### Lõi của thuật toán (Processing)
+
+Đây là lõi của thuật toán, nơi dữ liệu thực sự được băm.  
+Thuật toán thực hiện **80 vòng lặp** trên 5 biến băm làm việc (**A, B, C, D, E**), được khởi tạo từ **H₀ → H₄** trước khi xử lý mỗi khối 512 bit.
+
+#### Tính toán trong mỗi vòng t (0 → 79)
+
+Một giá trị tạm thời `Temp` được tính như sau:
+
+Temp = ROTL⁵(A) + fₜ(B, C, D) + E + Kₜ + Wₜ (mod 2³²)
+
+**Trong đó:**
+- **A, B, C, D, E:** Các biến làm việc 32-bit  
+- **ROTL⁵(A):** Xoay trái A 5 bit  
+- **fₜ(B, C, D):** Hàm logic phi tuyến tính khác nhau tùy thuộc vào vòng (sử dụng XOR, AND, NOT)  
+- **Kₜ:** Hằng số vòng (Round Constant) 32-bit, thay đổi mỗi 20 vòng  
+- **Wₜ:** Từ thông điệp đã mở rộng ở vòng t  
+- **“+”**: Phép cộng modulo 2³²  
+
+#### Cập nhật các biến làm việc:
+
+E = D
+D = C
+C = ROTL³⁰(B)
+B = A
+A = Temp
+
+#### Cập nhật trạng thái băm
+
+Sau khi hoàn thành **80 vòng lặp** cho một khối 512 bit, các biến làm việc (**A, B, C, D, E**) được cộng modulo 2³² vào các giá trị băm khởi tạo (**H₀ → H₄**):
+
+Hᵢ = Hᵢ + (biến làm việc tương ứng) (mod 2³²)
+
+Quy trình này được lặp lại cho **tất cả các khối 512 bit** đã được đệm.
+
 ### 5. Kết quả Đầu ra (Final Hash)
 Giá trị băm SHA-1 cuối cùng là sự nối (concatenation) của năm giá trị băm cuối cùng:$$\text{Hash} = H_0 \text{ || } H_1 \text{ || } H_2 \text{ || } H_3 \text{ || } H_4$$Kết quả là một giá trị băm 160-bit (40 ký tự hexa).
 ## Code
@@ -172,6 +204,7 @@ print(f"SHA-1: {result_hash}")
 # 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
 
 ```
+
 
 
 
