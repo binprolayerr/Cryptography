@@ -5,15 +5,17 @@ Write a function to authenticate a message under a secret key by using a secret-
 Verify that you cannot tamper with the message without breaking the MAC you've produced, and that you can't produce a new MAC without knowing the secret key.
 ## Hàm SHA hoạt động như thế nào
 ### 1. Khởi tạo (Initialization)
-Thuật toán bắt đầu bằng cách thiết lập năm biến băm 32-bit (còn gọi là trạng thái nội bộ), ký hiệu là $H_0, H_1, H_2, H_3, H_4$, với các giá trị hex cố định:
+Thuật toán bắt đầu bằng cách thiết lập năm biến băm 32-bit (còn gọi là trạng thái nội bộ), ký hiệu là \(H_0, H_1, H_2, H_3, H_4\), với các giá trị hex cố định:
 
-\begin{align*}
+\[
+\begin{aligned}
 H_0 &= \texttt{0x67452301} \\
 H_1 &= \texttt{0xEFCDAB89} \\
 H_2 &= \texttt{0x98BADCFE} \\
 H_3 &= \texttt{0x10325476} \\
 H_4 &= \texttt{0xC3D2E1F0}
-\end{align*}
+\end{aligned}
+\]
 
 Các giá trị này là "số ma thuật" (magic numbers) được sử dụng để khởi tạo quá trình băm.
 ### 2. Xử lý Đệm Thông điệp (Message Padding)
@@ -163,3 +165,4 @@ print(f"SHA-1: {result_hash}")
 # 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
 
 ```
+
